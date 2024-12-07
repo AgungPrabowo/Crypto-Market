@@ -2,7 +2,9 @@ package com.agpr.cryptomarket.di
 
 import com.agpr.cryptomarket.data.WebSocketClient
 import com.agpr.cryptomarket.data.WebSocketClientMain
+import com.agpr.cryptomarket.network.ExchangeApi
 import com.agpr.cryptomarket.network.MarketApi
+import com.agpr.cryptomarket.repository.ExchangeRepository
 import com.agpr.cryptomarket.repository.MarketRepository
 import dagger.Module
 import dagger.Provides
@@ -18,6 +20,7 @@ import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 @Module
@@ -36,7 +39,10 @@ object NetworkModule {
                 contentType(ContentType.Application.Json)
             }
             install(ContentNegotiation) {
-                json()
+                json(Json {
+                    ignoreUnknownKeys = true
+                    encodeDefaults = true
+                })
             }
         }
     }
@@ -50,4 +56,9 @@ object NetworkModule {
     @Singleton
     fun provideRealtimeMarketService(httpClient: HttpClient): WebSocketClient =
         WebSocketClientMain(httpClient)
+
+    @Provides
+    @Singleton
+    fun provideExchangeService(httpClient: HttpClient): ExchangeApi =
+        ExchangeRepository(httpClient)
 }

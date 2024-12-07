@@ -33,6 +33,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.agpr.cryptomarket.network.model.TabBarItem
+import com.agpr.cryptomarket.ui.exchange.ExchangeScreen
 import com.agpr.cryptomarket.ui.market.MarketScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -45,10 +46,9 @@ fun App() {
         unselectedIcon = Icons.Outlined.Home
     )
     val alertsTab = TabBarItem(
-        title = "Alerts",
+        title = "Exchange",
         selectedIcon = Icons.Filled.Notifications,
-        unselectedIcon = Icons.Outlined.Notifications,
-        badgeAmount = 7
+        unselectedIcon = Icons.Outlined.Notifications
     )
     val settingsTab = TabBarItem(
         title = "Settings",
@@ -58,7 +58,8 @@ fun App() {
     val moreTab = TabBarItem(
         title = "More",
         selectedIcon = Icons.AutoMirrored.Filled.List,
-        unselectedIcon = Icons.AutoMirrored.Outlined.List
+        unselectedIcon = Icons.AutoMirrored.Outlined.List,
+        badgeAmount = 7
     )
 
     // creating a list of all the tabs
@@ -77,7 +78,7 @@ fun App() {
                     MarketScreen()
                 }
                 composable(alertsTab.title) {
-                    Text(alertsTab.title)
+                    ExchangeScreen()
                 }
                 composable(settingsTab.title) {
                     Text(settingsTab.title)
