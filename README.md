@@ -8,8 +8,8 @@
   <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?style=for-the-badge&logoColor=333&logo=material-you"/>
   <br />
   <br />
-  <a href="https://github.com/agung-prabowo/Crypto-Market/stargazers"><img alt="stars" src="https://img.shields.io/github/stars/agung-prabowo/crypto-market?color=ffff00&style=for-the-badge"/></a>
-  <a href="https://hits.sh/github.com/agung-prabowo/crypto-market/"><img alt="Hits" src="https://hits.sh/github.com/agung-prabowo/Crypto-Market.svg?style=for-the-badge&label=Views&extraCount=10&color=54856b"/></a>
+  <a href="https://github.com/AgungPrabowo/Crypto-Market/stargazers"><img alt="stars" src="https://img.shields.io/github/stars/AgungPrabowo/crypto-market?color=ffff00&style=for-the-badge"/></a>
+  <a href="https://hits.sh/github.com/AgungPrabowo/crypto-market/"><img alt="Hits" src="https://hits.sh/github.com/AgungPrabowo/Crypto-Market.svg?style=for-the-badge&label=Views&extraCount=10&color=54856b"/></a>
   <br />
 </p>
 
