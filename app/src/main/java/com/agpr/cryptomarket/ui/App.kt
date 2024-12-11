@@ -29,12 +29,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.agpr.cryptomarket.network.model.TabBarItem
+import com.agpr.cryptomarket.ui.detailExchange.DetailExchange
 import com.agpr.cryptomarket.ui.exchange.ExchangeScreen
 import com.agpr.cryptomarket.ui.market.MarketScreen
+import com.agpr.cryptomarket.ui.setting.SettingScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -63,7 +67,7 @@ fun App() {
     )
 
     // creating a list of all the tabs
-    val tabBarItems = listOf(homeTab, alertsTab, settingsTab, moreTab)
+    val tabBarItems = listOf(homeTab, alertsTab, moreTab, settingsTab)
 
     // creating our navController
     val navController = rememberNavController()
@@ -78,13 +82,23 @@ fun App() {
                     MarketScreen()
                 }
                 composable(alertsTab.title) {
-                    ExchangeScreen()
+                    ExchangeScreen(navController)
                 }
                 composable(settingsTab.title) {
-                    Text(settingsTab.title)
+                    SettingScreen()
                 }
                 composable(moreTab.title) {
                     MoreView()
+                }
+                composable(
+                    "DetailExchange/{url}",
+                    arguments = listOf(
+                        navArgument("url") {
+                            type = NavType.StringType
+                        },
+                    ),
+                ) {
+                    DetailExchange()
                 }
             }
 
