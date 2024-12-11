@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.agpr.cryptomarket.component.Loading
-import com.agpr.cryptomarket.ui.theme.DarkSecondary
 import com.agpr.cryptomarket.utils.toCurrency
 import com.agpr.cryptomarket.utils.toMarketCap
 import com.example.myapplication.ui.market.MarketViewModel
@@ -103,7 +102,7 @@ fun MarketScreen() {
                                     Text(
                                         text = item.marketCapUsd.toMarketCap(),
                                         fontSize = 14.sp,
-                                        color = DarkSecondary
+                                        color = Color(0xFF9096A2)
                                     )
                                 }
                             }

@@ -1,5 +1,6 @@
 package com.agpr.cryptomarket.ui.exchange
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.agpr.cryptomarket.component.Loading
-import com.agpr.cryptomarket.utils.toCurrency
 import com.agpr.cryptomarket.utils.toMarketCap
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
-fun ExchangeScreen() {
+fun ExchangeScreen(navController: NavController) {
     val viewModel = hiltViewModel<ExchangeViewModel>()
     val exchangeState = viewModel.exchangeState
 
@@ -43,15 +46,18 @@ fun ExchangeScreen() {
                 }
                 Text(text = "Trading Pairs")
                 Text(text = "Volume (24Hr)")
-                Text(text = "Total (%)")
             }
             LazyColumn {
                 itemsIndexed(
                     exchangeState.listExchange,
                     key = { _, item -> item.rank }) { index, item ->
+                    val encodedUrl =
+                        URLEncoder.encode(item.exchangeUrl, StandardCharsets.UTF_8.toString())
+
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
+                            .clickable { navController.navigate("DetailExchange/${encodedUrl}") }
                     ) {
                         Row(
                             modifier = Modifier
@@ -70,7 +76,6 @@ fun ExchangeScreen() {
                             }
                             Text(text = item.tradingPairs)
                             Text(text = item.volumeUsd.toMarketCap())
-                            Text(text = item.percentTotalVolume.toCurrency().plus("%"))
                         }
                         if (index < exchangeState.listExchange.lastIndex)
                             HorizontalDivider(color = Color.Gray, thickness = .5.dp)
