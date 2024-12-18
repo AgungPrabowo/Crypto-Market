@@ -1,6 +1,8 @@
 package com.agpr.cryptomarket.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -32,14 +34,17 @@ import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.agpr.cryptomarket.network.model.TabBarItem
+import com.agpr.cryptomarket.ui.detailCoin.DetailCoinScreen
 import com.agpr.cryptomarket.ui.detailExchange.DetailExchange
 import com.agpr.cryptomarket.ui.exchange.ExchangeScreen
 import com.agpr.cryptomarket.ui.market.MarketScreen
 import com.agpr.cryptomarket.ui.setting.SettingScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun App() {
@@ -72,14 +77,25 @@ fun App() {
     // creating our navController
     val navController = rememberNavController()
 
+    var showBottomBar by rememberSaveable { mutableStateOf(true) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    showBottomBar = when (navBackStackEntry?.destination?.route) {
+        "Market" -> true
+        "Exchange" -> true
+        "Settings" -> true
+        "More" -> true
+        else -> false
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Scaffold(bottomBar = { TabView(tabBarItems, navController) }) {
+        Scaffold(bottomBar = { if (showBottomBar) TabView(tabBarItems, navController) }) {
             NavHost(navController = navController, startDestination = homeTab.title) {
                 composable(homeTab.title) {
-                    MarketScreen()
+                    MarketScreen(navController)
                 }
                 composable(alertsTab.title) {
                     ExchangeScreen(navController)
@@ -98,7 +114,18 @@ fun App() {
                         },
                     ),
                 ) {
-                    DetailExchange()
+                    val url = it.arguments?.getString("url") ?: ""
+                    DetailExchange(url)
+                }
+                composable(
+                    "DetailCoinScreen/{coin}",
+                    arguments = listOf(
+                        navArgument("coin") {
+                            type = NavType.StringType
+                        },
+                    ),
+                ) {
+                    DetailCoinScreen()
                 }
             }
 

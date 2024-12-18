@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.market
+package com.agpr.cryptomarket.ui.market
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,6 @@ import com.agpr.cryptomarket.network.MarketApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,15 +34,6 @@ class MarketViewModel @Inject constructor(
                 marketState = marketState.copy(listCoin = result.data)
             }
         }
-    }
-
-    fun getPriceCoin(): StateFlow<Map<String, String>> {
-        return webSocketClient.getPriceStream()
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                hashMapOf()
-            )
     }
 
     fun getPriceByCoin(coinList: Map<String, String>) {

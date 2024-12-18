@@ -104,9 +104,9 @@ dependencies {
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.serialization.kotlinx.json)
 
-    //==================== WebView =========================
-    implementation(libs.compose.webview)
-
     // DataStore
     implementation(libs.androidx.datastore.preferences)
+
+    //=================== Charts ============================
+    implementation (libs.compose.charts)
 }

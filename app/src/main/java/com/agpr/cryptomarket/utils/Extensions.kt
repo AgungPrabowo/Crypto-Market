@@ -1,9 +1,21 @@
 package com.agpr.cryptomarket.utils
 
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
-fun Double?.toCurrency(): String {
-    return DecimalFormat("###,###,##0.00").format(this ?: 0.0)
+fun Double?.toCurrency(decimalPlaces: Int = 2): String {
+    val pattern = buildString {
+        append("#,##0") // Comma as thousands separator
+        if (decimalPlaces > 0) {
+            append(".")
+            repeat(decimalPlaces) { append("0") }
+        }
+    }
+    val decimalFormat = DecimalFormat(pattern)
+    decimalFormat.decimalFormatSymbols =
+        DecimalFormatSymbols(Locale.US) // Ensure commas are properly used
+    return decimalFormat.format(this)
 }
 
 fun Double?.toMarketCap(): String {
