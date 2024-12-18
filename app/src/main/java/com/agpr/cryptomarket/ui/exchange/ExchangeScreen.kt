@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,8 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.agpr.cryptomarket.component.Loading
 import com.agpr.cryptomarket.utils.toMarketCap
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun ExchangeScreen(navController: NavController) {
@@ -40,24 +37,23 @@ fun ExchangeScreen(navController: NavController) {
                 Arrangement.SpaceBetween,
             ) {
                 Row {
-                    Text(text = "Rank")
-                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(text = "#")
+                    Box(modifier = Modifier.width(8.dp))
                     Text(text = "Name")
                 }
-                Text(text = "Trading Pairs")
                 Text(text = "Volume (24Hr)")
             }
             LazyColumn {
                 itemsIndexed(
                     exchangeState.listExchange,
                     key = { _, item -> item.rank }) { index, item ->
-                    val encodedUrl =
-                        URLEncoder.encode(item.exchangeUrl, StandardCharsets.UTF_8.toString())
-
+                    val url =
+                        item.exchangeUrl.replace(Regex("^https?://"), "").replace("/", "")
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .clickable { navController.navigate("DetailExchange/${encodedUrl}") }
+                            .clickable { navController.navigate("DetailExchange/$url") }
                     ) {
                         Row(
                             modifier = Modifier
@@ -67,14 +63,12 @@ fun ExchangeScreen(navController: NavController) {
                             Alignment.CenterVertically
                         ) {
                             Row(
-                                modifier = Modifier.width(150.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(text = item.rank)
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Box(modifier = Modifier.width(8.dp))
                                 Text(text = item.name)
                             }
-                            Text(text = item.tradingPairs)
                             Text(text = item.volumeUsd.toMarketCap())
                         }
                         if (index < exchangeState.listExchange.lastIndex)
@@ -84,5 +78,4 @@ fun ExchangeScreen(navController: NavController) {
             }
         }
     } else Loading()
-
 }

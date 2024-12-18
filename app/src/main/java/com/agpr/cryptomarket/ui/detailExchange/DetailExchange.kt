@@ -1,16 +1,25 @@
 package com.agpr.cryptomarket.ui.detailExchange
 
 import android.annotation.SuppressLint
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.kevinnzou.web.WebView
-import com.kevinnzou.web.rememberWebViewState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun DetailExchange() {
-    val viewModel = hiltViewModel<DetailExchangeViewModel>()
-    val state = rememberWebViewState(url = viewModel.uiState.url)
-
-    WebView(state = state)
+fun DetailExchange(url: String) {
+    AndroidView(
+        factory = { context ->
+            WebView(context).apply {
+                // Configure WebView settings
+                webViewClient = WebViewClient()
+                settings.javaScriptEnabled = true
+                loadUrl(url)
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }

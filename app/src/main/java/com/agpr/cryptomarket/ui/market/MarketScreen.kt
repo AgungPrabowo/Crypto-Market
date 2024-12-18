@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,23 +28,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.agpr.cryptomarket.component.Loading
 import com.agpr.cryptomarket.utils.toCurrency
 import com.agpr.cryptomarket.utils.toMarketCap
-import com.example.myapplication.ui.market.MarketViewModel
 
 @Composable
-fun MarketScreen() {
+fun MarketScreen(navController: NavController) {
     val viewModel = hiltViewModel<MarketViewModel>()
     val marketState = viewModel.marketState
     val state by viewModel.state.collectAsState()
-//    val state by viewModel.getPriceCoin().collectAsState()
-//    runCatching {
-//        state
-//    }.onSuccess {
-//        Timber.i("Damn $it")
-//    }
 
     viewModel.getPriceByCoin(state)
 
@@ -78,6 +73,7 @@ fun MarketScreen() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
+                            .clickable { navController.navigate("DetailCoinScreen/${item.id}") }
                     ) {
                         Row(
                             modifier = Modifier

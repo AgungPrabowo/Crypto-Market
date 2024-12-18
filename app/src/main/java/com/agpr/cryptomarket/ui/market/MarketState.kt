@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.market
+package com.agpr.cryptomarket.ui.market
 
 import com.agpr.cryptomarket.network.model.ListCoinApiModel
 
