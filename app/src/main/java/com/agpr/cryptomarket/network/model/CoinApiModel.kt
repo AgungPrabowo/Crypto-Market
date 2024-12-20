@@ -3,7 +3,7 @@ package com.agpr.cryptomarket.network.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ListCoinApiModel(
+data class CoinApiModel(
     val id: String,
     val name: String,
     val symbol: String,

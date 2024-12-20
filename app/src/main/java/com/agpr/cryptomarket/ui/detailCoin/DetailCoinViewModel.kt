@@ -25,6 +25,8 @@ class DetailCoinViewModel @Inject constructor(
     init {
         coin?.let {
             viewModelScope.launch(Dispatchers.IO) {
+                getCoinById()
+                getListMarket()
                 val result =
                     marketApi.getChartCoin(coin = coin, interval = "m1")
                 val minValue = result.data.minBy { it.priceUsd }.priceUsd
@@ -55,6 +57,39 @@ class DetailCoinViewModel @Inject constructor(
                     minValue = minValue,
                     maxValue = maxValue,
                 )
+            }
+        }
+    }
+
+    private fun getCoinById() {
+        if (coin != null) {
+            viewModelScope.launch {
+                val result = marketApi.getCoinById(coin)
+                detailCoinState = detailCoinState.copy(coinDetail = result.data)
+            }
+        }
+    }
+
+    fun getListMarket(offset: Int = 1, loadMore: Boolean = true) {
+        if (coin != null) {
+            viewModelScope.launch {
+                detailCoinState = detailCoinState.copy(loadingLoadMore = true)
+                val result = marketApi.getListMarket(
+                    coin, if (loadMore) {
+                        offset * detailCoinState.offset
+                    } else {
+                        offset
+                    }
+                )
+                detailCoinState = if (loadMore) {
+                    detailCoinState.copy(
+                        listMarket = detailCoinState.listMarket + result.data,
+                        offset = offset,
+                        loadingLoadMore = false,
+                    )
+                } else {
+                    detailCoinState.copy(listMarket = result.data, loadingLoadMore = false)
+                }
             }
         }
     }
