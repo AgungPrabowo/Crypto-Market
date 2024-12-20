@@ -40,6 +40,7 @@ _Crypto Market_ focuses on the following key things:
 - [Serialization](https://github.com/Kotlin/kotlinx.serialization) - A Java serialization/deserialization library to convert Java Objects into JSON and back
 - [Coil](https://github.com/coil-kt/coil) - Image loading for Android backed by Kotlin Coroutines.
 - [Ktor](https://github.com/ktorio/ktor) - Ktor is an asynchronous framework for creating microservices, web applications and more. Written in Kotlin from the ground up. ```WebSocket```
+- [Compose Charts](https://github.com/ehsannarmani/ComposeCharts) - Compose Charts is a an animated & flexible practical charts multiplatform library for jetpack compose
 
 # Architecture 👷‍♂️
 This app uses [MVVM(Model View View-Model)](https://developer.android.com/topic/architecture#recommended-app-arch) architecture.
