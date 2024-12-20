@@ -224,7 +224,7 @@ fun CoinStatistics(data: CoinApiModel?) {
             CoinInfoRow(key = "Market Cap", value = "$${data.marketCapUsd.toCurrency()}")
             CoinInfoRow(key = "VWAP (24Hr)", value = "$${data.vwap24Hr.toCurrency()}")
             CoinInfoRow(key = "Supply", value = data.supply.toCurrency())
-            CoinInfoRow(key = "Volumne (24Hr)", value = "$${data.volumeUsd24Hr.toCurrency()}")
+            CoinInfoRow(key = "Volume (24Hr)", value = "$${data.volumeUsd24Hr.toCurrency()}")
             CoinInfoRow(
                 key = "Change (24Hr)",
                 value = "$ ${data.changePercent24Hr.toCurrency()}%",
