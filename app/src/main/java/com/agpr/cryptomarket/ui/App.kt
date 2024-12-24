@@ -3,14 +3,17 @@ package com.agpr.cryptomarket.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
@@ -29,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -62,13 +66,13 @@ fun App() {
     val settingsTab = TabBarItem(
         title = "Settings",
         selectedIcon = Icons.Filled.Settings,
-        unselectedIcon = Icons.Outlined.Settings
+        unselectedIcon = Icons.Outlined.Settings,
+        badgeAmount = 7
     )
     val moreTab = TabBarItem(
-        title = "More",
-        selectedIcon = Icons.AutoMirrored.Filled.List,
-        unselectedIcon = Icons.AutoMirrored.Outlined.List,
-        badgeAmount = 7
+        title = "Favorite",
+        selectedIcon = Icons.Filled.Favorite,
+        unselectedIcon = Icons.Outlined.FavoriteBorder,
     )
 
     // creating a list of all the tabs
@@ -84,7 +88,7 @@ fun App() {
         "Market" -> true
         "Exchange" -> true
         "Settings" -> true
-        "More" -> true
+        "Favorite" -> true
         else -> false
     }
 
@@ -92,7 +96,15 @@ fun App() {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Scaffold(bottomBar = { if (showBottomBar) TabView(tabBarItems, navController) }) {
+        Scaffold(bottomBar = {
+            if (showBottomBar) Box(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.Red)
+            ) {
+                TabView(tabBarItems, navController)
+            }
+        }) {
             NavHost(navController = navController, startDestination = homeTab.title) {
                 composable(homeTab.title) {
                     MarketScreen(navController)
@@ -142,7 +154,7 @@ fun TabView(tabBarItems: List<TabBarItem>, navController: NavController) {
         mutableStateOf(0)
     }
 
-    NavigationBar {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceVariant) {
         // looping over each tab to generate the views and navigation for each item
         tabBarItems.forEachIndexed { index, tabBarItem ->
             NavigationBarItem(

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,9 +19,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.agpr.cryptomarket.network.model.CoinApiModel
 import com.agpr.cryptomarket.network.model.MarketApiModel
 import com.agpr.cryptomarket.utils.toCurrency
@@ -48,6 +59,7 @@ import ir.ehsannarmani.compose_charts.models.IndicatorPosition
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.Line
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DetailCoinScreen() {
@@ -55,104 +67,156 @@ fun DetailCoinScreen() {
     val viewModel = hiltViewModel<DetailCoinViewModel>()
     val detailCoinState = viewModel.detailCoinState
     val scrollState = rememberScrollState()
+    val coinDetail = detailCoinState.coinDetail
 
-    Column(Modifier.verticalScroll(scrollState)) {
-        if (detailCoinState.loadingChart) {
-            Box(modifier = Modifier.height(310.dp))
-        } else {
-            Box(Modifier.height(300.dp)) {
-                val chartColor =
-                    if (detailCoinState.charts.last().priceUsd > detailCoinState.charts.first().priceUsd) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        Color.Red
-                    }
-
-                LineChart(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(22.dp),
-                    labelHelperProperties = LabelHelperProperties(false),
-                    indicatorProperties = HorizontalIndicatorProperties(
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 12.sp,
-                        ),
-                        position = IndicatorPosition.Horizontal.End,
-                        contentBuilder = {
-                            it.toCurrency()
+    Scaffold(topBar = {
+        TopAppBar(
+            title = {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    if (coinDetail != null) {
+                        Row {
+                            AsyncImage(
+                                model = "https://assets.coincap.io/assets/icons/${coinDetail.symbol.lowercase()}@2x.png",
+                                contentDescription = coinDetail.symbol,
+                                modifier = Modifier
+                                    .height(32.dp)
+                                    .width(32.dp)
+                                    .padding(end = 8.dp)
+                            )
+                            Text(
+                                text = coinDetail.name,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = coinDetail.symbol,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Gray
+                            )
                         }
-                    ),
-                    data =
-                    listOf(
-                        Line(
-                            label = "",
-                            values = detailCoinState.charts.map { it.priceUsd },
-                            color = SolidColor(chartColor),
-                            firstGradientFillColor = chartColor.copy(alpha = .1f),
-                            secondGradientFillColor = Color.Transparent,
-                            strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
-                            gradientAnimationDelay = 1000,
-                            drawStyle = DrawStyle.Stroke(width = 2.dp),
-                        )
-                    ),
-                    gridProperties = GridProperties(false),
-                    dividerProperties = DividerProperties(false),
-                    animationMode = AnimationMode.Together(delayBuilder = {
-                        it * 500L
-                    }),
-                    minValue = detailCoinState.minValue,
-                    maxValue = detailCoinState.maxValue,
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                    } else Box {}
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.clickable { /* TODO: Handle set favorite */ }
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(onClick = { /* TODO: Handle back action */ }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        )
+    }) {
+        Column(
+            Modifier
+                .verticalScroll(scrollState)
+                .padding(it)
         ) {
-            chartInterval.forEach {
-                val selected = detailCoinState.interval.lowercase() == it.lowercase()
-                val primaryColor = MaterialTheme.colorScheme.primary
-                Text(
-                    it,
-                    modifier = Modifier
-                        .drawWithContent {
-                            drawContent()
-                            drawLine(
-                                color = if (selected) {
-                                    primaryColor
-                                } else {
-                                    Color.Transparent
-                                },
-                                start = Offset(0f, size.height),
-                                end = Offset(size.width, size.height),
-                                strokeWidth = 4F
-                            )
+            if (detailCoinState.loadingChart) {
+                Box(modifier = Modifier.height(310.dp))
+            } else {
+                Box(Modifier.height(300.dp)) {
+                    val chartColor =
+                        if (detailCoinState.charts.last().priceUsd > detailCoinState.charts.first().priceUsd) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            Color.Red
                         }
-                        .clickable {
-                            viewModel.getChart(
-                                it
-                                    .lowercase()
-                            )
-                        },
-                    fontSize = 12.sp,
-                    color = if (selected) {
-                        primaryColor
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    }
-                )
-            }
-        }
 
-        Box(modifier = Modifier.height(16.dp))
-        CoinStatistics(detailCoinState.coinDetail)
-        ListMarket(
-            detailCoinState.listMarket,
-            detailCoinState.loadingLoadMore
-        ) { viewModel.getListMarket(detailCoinState.limit + 1) }
+                    LineChart(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(22.dp),
+                        labelHelperProperties = LabelHelperProperties(false),
+                        indicatorProperties = HorizontalIndicatorProperties(
+                            textStyle = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 12.sp,
+                            ),
+                            position = IndicatorPosition.Horizontal.End,
+                            contentBuilder = {
+                                it.toCurrency()
+                            }
+                        ),
+                        data =
+                        listOf(
+                            Line(
+                                label = "",
+                                values = detailCoinState.charts.map { it.priceUsd },
+                                color = SolidColor(chartColor),
+                                firstGradientFillColor = chartColor.copy(alpha = .1f),
+                                secondGradientFillColor = Color.Transparent,
+                                strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
+                                gradientAnimationDelay = 1000,
+                                drawStyle = DrawStyle.Stroke(width = 2.dp),
+                            )
+                        ),
+                        gridProperties = GridProperties(false),
+                        dividerProperties = DividerProperties(false),
+                        animationMode = AnimationMode.Together(delayBuilder = {
+                            it * 500L
+                        }),
+                        minValue = detailCoinState.minValue,
+                        maxValue = detailCoinState.maxValue,
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                chartInterval.forEach {
+                    val selected = detailCoinState.interval.lowercase() == it.lowercase()
+                    val primaryColor = MaterialTheme.colorScheme.primary
+                    Text(
+                        it,
+                        modifier = Modifier
+                            .drawWithContent {
+                                drawContent()
+                                drawLine(
+                                    color = if (selected) {
+                                        primaryColor
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    start = Offset(0f, size.height),
+                                    end = Offset(size.width, size.height),
+                                    strokeWidth = 4F
+                                )
+                            }
+                            .clickable {
+                                viewModel.getChart(
+                                    it
+                                        .lowercase()
+                                )
+                            },
+                        fontSize = 12.sp,
+                        color = if (selected) {
+                            primaryColor
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        }
+                    )
+                }
+            }
+
+            Box(modifier = Modifier.height(16.dp))
+            CoinStatistics(detailCoinState.coinDetail)
+            ListMarket(
+                detailCoinState.listMarket,
+                detailCoinState.loadingLoadMore
+            ) { viewModel.getListMarket(detailCoinState.limit + 1) }
+        }
     }
 }
 
@@ -265,6 +329,7 @@ fun MarketRow(name: String, pair: String, volume: String, fontWeight: FontWeight
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(name, Modifier.width(150.dp), fontWeight = fontWeight, fontSize = 14.sp)
         Text(
