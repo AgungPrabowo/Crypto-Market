@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -98,9 +99,13 @@ fun DetailCoinScreen() {
                         }
                     } else Box {}
                     Icon(
-                        imageVector = Icons.Filled.Favorite,
+                        imageVector = if (detailCoinState.isFavorite) {
+                            Icons.Filled.Favorite
+                        } else {
+                            Icons.Outlined.FavoriteBorder
+                        },
                         contentDescription = "Favorite",
-                        modifier = Modifier.clickable { /* TODO: Handle set favorite */ }
+                        modifier = Modifier.clickable { viewModel.toggleFavorite() }
                     )
                 }
             },

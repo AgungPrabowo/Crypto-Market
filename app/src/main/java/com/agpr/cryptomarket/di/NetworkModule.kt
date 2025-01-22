@@ -19,6 +19,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
@@ -39,6 +40,11 @@ object NetworkModule {
                 contentType(ContentType.Application.Json)
             }
             install(ContentNegotiation) {
+                register(ContentType.Text.Html, KotlinxSerializationConverter(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                }))
                 json(Json {
                     ignoreUnknownKeys = true
                     encodeDefaults = true
