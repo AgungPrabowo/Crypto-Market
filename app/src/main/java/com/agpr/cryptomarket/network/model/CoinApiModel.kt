@@ -13,7 +13,7 @@ data class CoinApiModel(
     val marketCapUsd: Double,
     val volumeUsd24Hr: Double,
     val priceUsd: Double,
-    val changePercent24Hr: Double,
+    val changePercent24Hr: Double?,
     val vwap24Hr: Double,
     val explorer: String?,
     val up: Boolean = true

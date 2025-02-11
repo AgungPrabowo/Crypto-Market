@@ -297,7 +297,7 @@ fun CoinStatistics(data: CoinApiModel?) {
             CoinInfoRow(
                 key = "Change (24Hr)",
                 value = "$ ${data.changePercent24Hr.toCurrency()}%",
-                valueColor = if (data.changePercent24Hr > 0) {
+                valueColor = if ((data.changePercent24Hr ?: 0.0) > 0) {
                     Color.Green
                 } else {
                     Color.Red
