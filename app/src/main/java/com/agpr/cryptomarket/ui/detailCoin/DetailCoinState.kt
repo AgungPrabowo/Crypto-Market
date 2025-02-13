@@ -15,4 +15,5 @@ data class DetailCoinState(
     val offset: Int = 1,
     val limit: Int = 10,
     val loadingLoadMore: Boolean = false,
+    val isFavorite: Boolean = false,
 )

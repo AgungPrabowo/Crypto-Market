@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import javax.inject.Inject
 
 class DataStore @Inject constructor(context: Context) {
@@ -14,6 +15,6 @@ class DataStore @Inject constructor(context: Context) {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
         val IS_DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
         val IS_SECURE_ENV_KEY = booleanPreferencesKey("secure_env")
-        val IS_BIOMETRIC_AUTH_SET_KEY = booleanPreferencesKey("biometric_auth")
+        val FAVORITE_LIST = stringSetPreferencesKey("favorite_list")
     }
 }

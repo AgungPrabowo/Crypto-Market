@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -45,6 +44,7 @@ import com.agpr.cryptomarket.network.model.TabBarItem
 import com.agpr.cryptomarket.ui.detailCoin.DetailCoinScreen
 import com.agpr.cryptomarket.ui.detailExchange.DetailExchange
 import com.agpr.cryptomarket.ui.exchange.ExchangeScreen
+import com.agpr.cryptomarket.ui.favorite.FavoriteScreen
 import com.agpr.cryptomarket.ui.market.MarketScreen
 import com.agpr.cryptomarket.ui.setting.SettingScreen
 
@@ -116,7 +116,7 @@ fun App() {
                     SettingScreen()
                 }
                 composable(moreTab.title) {
-                    MoreView()
+                    FavoriteScreen(navController)
                 }
                 composable(
                     "DetailExchange/{url}",
@@ -208,19 +208,5 @@ fun TabBarBadgeView(count: Int? = null) {
         Badge {
             Text(count.toString())
         }
-    }
-}
-
-// This was added to demonstrate that we are in fact changing views when we click a new tab
-@Composable
-fun MoreView() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text("Thing 1")
-        Text("Thing 2")
-        Text("Thing 3")
-        Text("Thing 4")
-        Text("Thing 5")
     }
 }

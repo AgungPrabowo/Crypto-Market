@@ -5,6 +5,9 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 
 fun Double?.toCurrency(decimalPlaces: Int = 2): String {
+    if (this == null) {
+        return "0.00"
+    }
     val pattern = buildString {
         append("#,##0") // Comma as thousands separator
         if (decimalPlaces > 0) {

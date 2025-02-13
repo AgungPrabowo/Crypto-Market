@@ -125,7 +125,7 @@ fun MarketScreen(navController: NavController) {
                                 Text(
                                     text = item.changePercent24Hr.toCurrency().plus("%"),
                                     fontSize = 14.sp,
-                                    color = if (item.changePercent24Hr < 0) Color.Red else Color.Green
+                                    color = if ((item.changePercent24Hr ?: 0.0) < 0) Color.Red else Color.Green
                                 )
                             }
                         }
